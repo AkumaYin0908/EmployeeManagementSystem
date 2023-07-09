@@ -5,19 +5,19 @@
  */
 package demo.app.repository;
 
+import demo.app.dto.EmployeeDTO;
 import demo.app.model.Employee;
-import demo.app.model.EmploymentStatus;
 import demo.app.model.Position;
 import demo.app.model.SalaryGrade;
 import demo.app.model.Status;
+import java.util.List;
 
 
 
 public interface EmployeeRepository {
     
-    public Employee findById(int employeeId);
-    
-    public void viewEmployee(Employee employee,Position position,SalaryGrade salaryGrade, EmploymentStatus employmentStatus);
+
+    public List<EmployeeDTO> viewEmployee(Employee employee,Position position,SalaryGrade salaryGrade);
     
     public void addEmployee(Employee employee);
     

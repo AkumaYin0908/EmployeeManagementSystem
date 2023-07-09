@@ -45,7 +45,7 @@ public class Employee extends Person {
     public int getEmploymentStatus() {
         return employmentStatus;
     }
-
+    
     public void setEmploymentStatus(int employmentStatus) {
         this.employmentStatus = employmentStatus;
     }

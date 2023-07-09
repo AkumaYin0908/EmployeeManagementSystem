@@ -5,8 +5,10 @@
  */
 package demo.app.repository;
 
+import demo.app.dto.PositionDTO;
 import demo.app.model.Position;
 import demo.app.model.SalaryGrade;
+import java.util.List;
 
 /**
  *
@@ -14,9 +16,7 @@ import demo.app.model.SalaryGrade;
  */
 public interface PositionRepository {
 
-    public Position findById(int positionId);
-
-    public void viewPosition(Position position, SalaryGrade salaryGrade);
+    public List<PositionDTO> viewPosition(Position position, SalaryGrade salaryGrade);
 
     public void addPosition(Position position);
 

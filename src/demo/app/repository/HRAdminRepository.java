@@ -12,8 +12,7 @@ import demo.app.model.HRAdmin;
  * @author User
  */
 public interface HRAdminRepository {
-    
-    public HRAdmin findById(int hrAdminId);
+  
     
     public void login(HRAdmin hrAdmin);
     
