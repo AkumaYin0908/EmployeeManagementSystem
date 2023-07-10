@@ -6,8 +6,8 @@
 package demo.app.main;
 
 import demo.app.connection.DBConnection;
-import demo.app.view.LoginForm;
-import demo.app.view.MainForm;
+import demo.app.view.LoginView;
+import demo.app.view.MainView;
 
 /**
  *
@@ -20,6 +20,6 @@ public class Main {
     public static void main(String[] args) {
         connection.connect();
 
-        LoginForm.accountInit(connection);
+        LoginView.accountInit(connection);
     }
 }

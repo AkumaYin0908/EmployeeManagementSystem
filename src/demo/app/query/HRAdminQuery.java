@@ -9,16 +9,19 @@ package demo.app.query;
  *
  * @author Philip
  */
-public interface HRAdminQuery {
-    
-    String FIND_HRADMIN="SELECT "
+public final class HRAdminQuery {
+
+    private HRAdminQuery() {
+    }
+
+    public static final String FIND_HRADMIN = "SELECT "
             + "user_name"
             + ", password "
             + "FROM hr_admin WHERE "
             + "user_name = ? and "
             + "password=?";
-    
-    String ADD_HRADMIN="INSERT INTO hr_admin"
+
+    public static final String ADD_HRADMIN = "INSERT INTO hr_admin"
             + "(first_name"
             + ", mid_name"
             + ", last_name"
@@ -26,7 +29,6 @@ public interface HRAdminQuery {
             + ", user_name"
             + ", password)"
             + " VALUES(?,?,?,?,?,?)";
-    
-    
-    String SEARCH_USERNAME="SELECT user_name FROM hr_admin WHERE user_name=?";
+
+    public static final String SEARCH_USERNAME = "SELECT user_name FROM hr_admin WHERE user_name=?";
 }

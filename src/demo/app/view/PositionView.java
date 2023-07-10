@@ -16,7 +16,7 @@ import java.util.List;
  *
  * @author Philip
  */
-public class PositionForm {
+public class PositionView {
 
     public static void positionInit(DBConnection connection) {
         Position position = new Position();

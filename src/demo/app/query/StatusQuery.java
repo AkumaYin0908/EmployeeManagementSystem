@@ -9,12 +9,14 @@ package demo.app.query;
  *
  * @author User
  */
-public interface StatusQuery {
-    
-   String VIEW_STATUS="SELECT * FROM status";
-   
-   String SEARCH_STATUS="SELECT status_id "
-           + "FROM status WHERE status_id=?";
-   
-   
+public final class StatusQuery {
+
+    private StatusQuery() {
+    }
+
+    public static final String VIEW_STATUS = "SELECT * FROM status";
+
+    public static final String SEARCH_STATUS = "SELECT status_id "
+            + "FROM status WHERE status_id=?";
+
 }

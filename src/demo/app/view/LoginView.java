@@ -15,7 +15,7 @@ import java.util.Scanner;
  *
  * @author Philip
  */
-public class LoginForm {
+public class LoginView {
     
     public static void accountInit(DBConnection connection) {
         HRAdminController hrAdminController = new HRAdminController(connection);
@@ -42,11 +42,11 @@ public class LoginForm {
                     break;
                 default:
                     System.out.println("Invalid input. Try again");
-                    LoginForm.accountInit(connection);
+                    LoginView.accountInit(connection);
             }
         } catch (InputMismatchException ex) {
             System.err.println("Only numbers can be inputted!");
-            LoginForm.accountInit(connection);
+            LoginView.accountInit(connection);
         } finally {
             scanner.close();
         }

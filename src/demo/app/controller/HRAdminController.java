@@ -10,8 +10,8 @@ import demo.app.query.HRAdminQuery;
 import demo.app.model.HRAdmin;
 import demo.app.repository.HRAdminRepository;
 import demo.app.utils.BirthDateValidator;
-import demo.app.view.LoginForm;
-import demo.app.view.MainForm;
+import demo.app.view.LoginView;
+import demo.app.view.MainView;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -54,11 +54,10 @@ public class HRAdminController implements HRAdminRepository {
             result = statement.executeQuery();
 
             if (result.next()) {
-                MainForm.userName = hrAdmin.getUserName();
-                MainForm.mainInit(CONNECTION);
+                MainView.userName = hrAdmin.getUserName();
+                MainView.mainInit(CONNECTION);
             } else {
-                System.out.println("Incorrect username or password. Please try again.");
-                
+                System.out.println("Incorrect username or password. Please try again.");              
                 login(hrAdmin);
             }
 
@@ -79,7 +78,7 @@ public class HRAdminController implements HRAdminRepository {
 
     @Override
     public void logout(HRAdmin hrAdmin) {
-       LoginForm.accountInit(CONNECTION);
+       LoginView.accountInit(CONNECTION);
     }
 
     @Override
@@ -107,12 +106,12 @@ public class HRAdminController implements HRAdminRepository {
             statement.executeUpdate();
 
             System.out.printf("%s %s %s has been successfully registered as HR Admin%n", hrAdmin.getFirstName(), hrAdmin.getMidName(), hrAdmin.getLastName());
-            LoginForm.accountInit(CONNECTION);
+            LoginView.accountInit(CONNECTION);
 
         } catch (SQLException ex) {
 
             System.err.println(ex.getMessage());
-            MainForm.mainInit(CONNECTION);
+            MainView.mainInit(CONNECTION);
         } finally {
             scanner.close();
             try {
@@ -120,7 +119,7 @@ public class HRAdminController implements HRAdminRepository {
             } catch (SQLException ex) {
                 System.err.println(ex.getMessage());
 
-                MainForm.mainInit(CONNECTION);
+                MainView.mainInit(CONNECTION);
             }
         }
     }

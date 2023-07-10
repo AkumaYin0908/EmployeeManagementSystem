@@ -14,7 +14,7 @@ import java.util.List;
  *
  * @author User
  */
-public class StatusForm {
+public class StatusView {
 
     public static void statusInit(DBConnection connection) {
         Status status = new Status();

@@ -18,9 +18,9 @@ import demo.app.query.PositionQuery;
 import demo.app.query.StatusQuery;
 import demo.app.repository.EmployeeRepository;
 import demo.app.utils.BirthDateValidator;
-import demo.app.view.MainForm;
-import demo.app.view.PositionForm;
-import demo.app.view.StatusForm;
+import demo.app.view.MainView;
+import demo.app.view.PositionView;
+import demo.app.view.StatusView;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -45,7 +45,7 @@ public class EmployeeController implements EmployeeRepository {
 
     public EmployeeController(DBConnection CONNECTION) {
         this.CONNECTION = CONNECTION;
-        
+
     }
 
     @Override
@@ -55,7 +55,7 @@ public class EmployeeController implements EmployeeRepository {
         try {
             String chosenOption = chooseViewOption();
             if (chosenOption == null) {
-                MainForm.mainInit(CONNECTION);
+                MainView.mainInit(CONNECTION);
             } else {
                 statement = CONNECTION.getSqlConnection().prepareStatement(EmployeeQuery.VIEW_EMPLOYEE);
                 statement.setString(1, chosenOption);
@@ -79,7 +79,7 @@ public class EmployeeController implements EmployeeRepository {
 
         } catch (SQLException ex) {
             System.err.println(ex.getMessage());
-            MainForm.mainInit(CONNECTION);
+            MainView.mainInit(CONNECTION);
         }
         return employeeList;
     }
@@ -103,11 +103,20 @@ public class EmployeeController implements EmployeeRepository {
                 int employeeId = id.getInt(1);
                 System.out.println("Employee ID No. " + employeeId + " has been added to the database.");
             }
+            System.out.println("***************************************************************************************\n");
+            MainView.mainInit(CONNECTION);
 
         } catch (SQLException ex) {
             ex.printStackTrace();
             System.err.println(ex.getMessage());
-            MainForm.mainInit(CONNECTION);
+            MainView.mainInit(CONNECTION);
+        } finally {
+            scanner.close();
+            try {
+                CONNECTION.getSqlConnection().close();
+            } catch (SQLException ex) {
+                System.err.println(ex);
+            }
         }
 
     }
@@ -127,7 +136,10 @@ public class EmployeeController implements EmployeeRepository {
                 employee.setEmployeeId(scanner.nextInt());
             }
             chooseUpdateOption(employee);
-            
+
+            System.out.println("***************************************************************************************\n");
+            MainView.mainInit(CONNECTION);
+
         } catch (SQLException ex) {
             System.err.println(ex);
         } finally {
@@ -142,11 +154,11 @@ public class EmployeeController implements EmployeeRepository {
 
     @Override
     public void deleteEmployee(Employee employee) {
-        scanner = new Scanner(System.in);
-       
-        System.out.println("Enter Employee ID to delete: ");
-        employee.setEmployeeId(scanner.nextInt());
+
         try {
+            scanner = new Scanner(System.in);
+            System.out.println("Enter Employee ID to delete: ");
+            employee.setEmployeeId(scanner.nextInt());
             statement = CONNECTION.getSqlConnection().prepareStatement(EmployeeQuery.SEARCH_EMPLOYEE);
             statement.setInt(1, employee.getEmployeeId());
             result = statement.executeQuery();
@@ -163,13 +175,15 @@ public class EmployeeController implements EmployeeRepository {
                 statement = CONNECTION.getSqlConnection().prepareStatement(EmployeeQuery.DELETE_EMPLOYEE);
                 statement.setInt(1, employee.getEmployeeId());
                 statement.executeUpdate();
-                System.out.println("Employee ID No." + employee.getEmployeeId() + " has been deleted");        
-                
+                System.out.println("Employee ID No." + employee.getEmployeeId() + " has been deleted");
 
             } else {
                 System.out.println("Deletion canceled...");
-                MainForm.mainInit(CONNECTION);
+                MainView.mainInit(CONNECTION);
             }
+
+            System.out.println("***************************************************************************************\n");
+            MainView.mainInit(CONNECTION);
 
         } catch (SQLException ex) {
             System.err.println(ex);
@@ -218,7 +232,7 @@ public class EmployeeController implements EmployeeRepository {
                 updateStatus(employee.getEmployeeId());
                 break;
             case 0:
-                MainForm.mainInit(CONNECTION);
+                MainView.mainInit(CONNECTION);
                 break;
             default:
                 System.out.println("Invalid choice");
@@ -249,7 +263,7 @@ public class EmployeeController implements EmployeeRepository {
                     return "RETIRED";
 
                 case 0:
-                    MainForm.mainInit(CONNECTION);
+                    MainView.mainInit(CONNECTION);
                     return null;
 
                 default:
@@ -279,7 +293,7 @@ public class EmployeeController implements EmployeeRepository {
             System.out.println("Enter birth date(MM/dd/yyyy): ");
             employee.setBirthDate(BirthDateValidator.validate(scanner));
 
-            PositionForm.positionInit(CONNECTION);
+            PositionView.positionInit(CONNECTION);
 
             System.out.println("Enter selected position id: ");
             employee.setPosition(scanner.nextInt());
@@ -317,7 +331,7 @@ public class EmployeeController implements EmployeeRepository {
 
             System.out.println("Employee ID No." + employeeId + "'s first name has been updated.");
 
-            MainForm.mainInit(CONNECTION);
+            MainView.mainInit(CONNECTION);
         } finally {
             scanner.close();
             CONNECTION.getSqlConnection().close();
@@ -336,7 +350,7 @@ public class EmployeeController implements EmployeeRepository {
             statement.executeUpdate();
             System.out.println("Employee ID No." + employeeId + "'s middle name has been updated.");
 
-            MainForm.mainInit(CONNECTION);
+            MainView.mainInit(CONNECTION);
         } finally {
             scanner.close();
             CONNECTION.getSqlConnection().close();
@@ -355,7 +369,7 @@ public class EmployeeController implements EmployeeRepository {
             statement.setInt(2, employeeId);
             statement.executeUpdate();
             System.out.println("Employee ID No." + employeeId + "'s last name has been updated.");
-            MainForm.mainInit(CONNECTION);
+            MainView.mainInit(CONNECTION);
 
         } finally {
             scanner.close();
@@ -376,7 +390,7 @@ public class EmployeeController implements EmployeeRepository {
             statement.executeUpdate();
             System.out.println("Employee ID No." + employeeId + "'s birth date has been updated.");
 
-            MainForm.mainInit(CONNECTION);
+            MainView.mainInit(CONNECTION);
 
         } finally {
             scanner.close();
@@ -386,7 +400,7 @@ public class EmployeeController implements EmployeeRepository {
 
     private void updatePosition(int employeeId) throws SQLException {
         try {
-            PositionForm.positionInit(CONNECTION);
+            PositionView.positionInit(CONNECTION);
             scanner = new Scanner(System.in);
             int positionId = scanner.nextInt();
 
@@ -406,7 +420,7 @@ public class EmployeeController implements EmployeeRepository {
 
             System.out.println("Employee ID No." + employeeId + "'s position has been updated.");
 
-            MainForm.mainInit(CONNECTION);
+            MainView.mainInit(CONNECTION);
 
             System.out.println("");
         } finally {
@@ -418,7 +432,7 @@ public class EmployeeController implements EmployeeRepository {
 
     private void updateStatus(int employeeId) throws SQLException {
         try {
-            StatusForm.statusInit(CONNECTION);
+            StatusView.statusInit(CONNECTION);
             scanner = new Scanner(System.in);
             int statusId = scanner.nextInt();
 
@@ -438,7 +452,7 @@ public class EmployeeController implements EmployeeRepository {
 
             System.out.println("Employee ID No." + employeeId + "'s status has been updated.");
 
-            MainForm.mainInit(CONNECTION);
+            MainView.mainInit(CONNECTION);
 
             System.out.println("");
         } finally {
