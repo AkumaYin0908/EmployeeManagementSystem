@@ -52,13 +52,6 @@ public class PositionController implements PositionRepository {
         } catch (SQLException ex) {
             ex.printStackTrace();
             System.out.println(ex.getMessage());
-        }finally {
-            try{
-                CONNECTION.getSqlConnection().close();
-            }catch(SQLException e){
-                e.printStackTrace();
-            System.out.println(e.getMessage());
-            }
         }
         return positionList;
     }

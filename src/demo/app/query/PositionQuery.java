@@ -17,5 +17,7 @@ public interface PositionQuery {
             + ", salary_grade.salary"
             + " FROM position"
             + " LEFT JOIN salary_grade ON position.salary_grade=salary_grade.salary_grade";
-          
+    
+    String SEARCH_POSITION="SELECT "
+            + "position_id FROM position WHERE position_id=?";
 }

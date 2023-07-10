@@ -26,7 +26,8 @@ SET time_zone = "+00:00";
 --
 -- Table structure for table `employee`
 --
-
+CREATE DATABASE IF NOT EXISTS employee_demo;
+USE employee_demo;
 CREATE TABLE `employee` (
   `employee_id` int(11) NOT NULL,
   `first_name` varchar(20) NOT NULL,

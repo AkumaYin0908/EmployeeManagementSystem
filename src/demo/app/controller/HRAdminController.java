@@ -32,8 +32,6 @@ public class HRAdminController implements HRAdminRepository {
 
     public HRAdminController(DBConnection CONNECTION) {
         this.CONNECTION = CONNECTION;
-
-        CONNECTION.connect();
     }
 
     @Override

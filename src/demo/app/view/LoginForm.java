@@ -22,7 +22,7 @@ public class LoginForm {
         System.out.println(" Welcome to EMPLOYEE MANAGEMENT SYSTEM V 1.0.0");
         System.out.println("[1] Login"
                 + "\n[2] Register"
-                + "\n[3] Cancel");
+                + "\n[0] Cancel");
         Scanner scanner = new Scanner(System.in);
         try {
 
@@ -36,7 +36,7 @@ public class LoginForm {
                 case 2:
                     hrAdminController.register(new HRAdmin());
                     break;
-                case 3:
+                case 0:
                     System.out.println("Exiting....");
                     System.exit(0);
                     break;

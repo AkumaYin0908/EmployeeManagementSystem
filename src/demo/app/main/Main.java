@@ -14,11 +14,11 @@ import demo.app.view.MainForm;
  * @author Philip
  */
 public class Main {
-    private static DBConnection connection = DBConnection.getInstance();
-    public static void main(String[] args) {
-         
 
-    
+    private static DBConnection connection = DBConnection.getInstance();
+
+    public static void main(String[] args) {
+        connection.connect();
 
         LoginForm.accountInit(connection);
     }

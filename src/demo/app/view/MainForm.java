@@ -24,9 +24,9 @@ import java.util.Scanner;
  * @author Philip
  */
 public class MainForm {
-
+    
     public static String userName;
-
+    
     public static void mainInit(DBConnection connection) {
         EmployeeController employeeController = new EmployeeController(connection);
         Employee employee = new Employee();
@@ -43,13 +43,13 @@ public class MainForm {
                 + "\n[8] Logout");
         Scanner scanner = new Scanner(System.in);
         try {
-
+            
             System.out.print("Enter choice: ");
             int choice = scanner.nextInt();
-
+            
             switch (choice) {
                 case 1:
-
+                    
                     List<EmployeeDTO> employeeList = employeeController.viewEmployee(employee, position, salaryGrade);
                     System.out.println("************************************** VIEW EMPLOYEE **************************************");
                     System.out.printf("%s\t%-10s %-15s %-10s\t\t%-20s\t%-10s\t%-40s\t%-5s\n\n",
@@ -61,7 +61,7 @@ public class MainForm {
                             "Age",
                             "Position",
                             "Salary");
-
+                    
                     for (EmployeeDTO employeeDTO : employeeList) {
                         System.out.printf("%s\t%-10s %-15s %-10s\t\t%-20s\t%-10s\t%-40s\t%-5s\n\n",
                                 employeeDTO.getEmployeeId(),
@@ -75,19 +75,27 @@ public class MainForm {
                     }
                     System.out.println("***************************************************************************************\n");
                     MainForm.mainInit(connection);
-
+                    
                     break;
                 case 2:
+                    
                     System.out.println("************************************** ADD EMPLOYEE **************************************");
                     employeeController.addEmployee(employee);
-                    System.out.println(employee.getEmployeeId() + " has been added to the database.");
                     System.out.println("***************************************************************************************\n");
                     MainForm.mainInit(connection);
-
+                    
                     break;
                 case 3:
-                    System.out.println("Exiting....");
-                    System.exit(0);
+                    System.out.println("************************************** UPDATE EMPLOYEE **************************************");
+                    employeeController.updateEmployee(employee);
+                    System.out.println("***************************************************************************************\n");
+                    break;
+                case 4:
+                    System.out.println("************************************** DELETE EMPLOYEE **************************************");
+                    employeeController.deleteEmployee(employee);
+                    System.out.println("***************************************************************************************\n");
+                    MainForm.mainInit(connection);
+                    
                     break;
                 default:
                     System.out.println("Invalid input. Try again");
@@ -100,5 +108,5 @@ public class MainForm {
             scanner.close();
         }
     }
-
+    
 }
