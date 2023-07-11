@@ -14,7 +14,7 @@ public final class HRAdminQuery {
     private HRAdminQuery() {
     }
 
-    public static final String FIND_HRADMIN = "SELECT "
+    public static final String SEARCH_USERNAME_PASSWORD = "SELECT "
             + "user_name"
             + ", password "
             + "FROM hr_admin WHERE "

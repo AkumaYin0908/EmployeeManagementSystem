@@ -31,6 +31,8 @@ import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -80,6 +82,13 @@ public class EmployeeController implements EmployeeRepository {
         } catch (SQLException ex) {
             System.err.println(ex.getMessage());
             MainView.mainInit(CONNECTION);
+        } finally {
+            try {
+                CONNECTION.getSqlConnection().close();
+            } catch (SQLException ex) {
+                System.err.println(ex.getMessage());
+                MainView.mainInit(CONNECTION);
+            }
         }
         return employeeList;
     }
@@ -103,38 +112,27 @@ public class EmployeeController implements EmployeeRepository {
                 int employeeId = id.getInt(1);
                 System.out.println("Employee ID No. " + employeeId + " has been added to the database.");
             }
-            System.out.println("***************************************************************************************\n");
-            MainView.mainInit(CONNECTION);
 
         } catch (SQLException ex) {
-            ex.printStackTrace();
+
             System.err.println(ex.getMessage());
             MainView.mainInit(CONNECTION);
         } finally {
-            scanner.close();
             try {
                 CONNECTION.getSqlConnection().close();
             } catch (SQLException ex) {
-                System.err.println(ex);
+                System.err.println(ex.getMessage());
+                MainView.mainInit(CONNECTION);
             }
         }
-
     }
 
     @Override
     public void updateEmployee(Employee employee) {
 
-        scanner = new Scanner(System.in);
-        System.out.println("Enter Employee ID to update: ");
-        employee.setEmployeeId(scanner.nextInt());
         try {
-            statement = CONNECTION.getSqlConnection().prepareStatement(EmployeeQuery.SEARCH_EMPLOYEE);
-            statement.setInt(1, employee.getEmployeeId());
-
-            while (!result.next()) {
-                System.out.println("This id does not exist. Try again: ");
-                employee.setEmployeeId(scanner.nextInt());
-            }
+            scanner = new Scanner(System.in);
+            employee.setEmployeeId(verifyEmployeeId(scanner));
             chooseUpdateOption(employee);
 
             System.out.println("***************************************************************************************\n");
@@ -142,12 +140,13 @@ public class EmployeeController implements EmployeeRepository {
 
         } catch (SQLException ex) {
             System.err.println(ex);
-        } finally {
-            scanner.close();
+            MainView.mainInit(CONNECTION);
+        }finally {
             try {
                 CONNECTION.getSqlConnection().close();
             } catch (SQLException ex) {
-                System.err.println(ex);
+                System.err.println(ex.getMessage());
+                MainView.mainInit(CONNECTION);
             }
         }
     }
@@ -157,16 +156,7 @@ public class EmployeeController implements EmployeeRepository {
 
         try {
             scanner = new Scanner(System.in);
-            System.out.println("Enter Employee ID to delete: ");
-            employee.setEmployeeId(scanner.nextInt());
-            statement = CONNECTION.getSqlConnection().prepareStatement(EmployeeQuery.SEARCH_EMPLOYEE);
-            statement.setInt(1, employee.getEmployeeId());
-            result = statement.executeQuery();
-
-            while (!result.next()) {
-                System.out.println("This id does not exist. Try again: ");
-                employee.setEmployeeId(scanner.nextInt());
-            }
+            employee.setEmployeeId(verifyEmployeeId(scanner));
 
             System.out.println("Are you sure you want to delete this employee?\n[1]Yes\n[2]No");
             int choice = scanner.nextInt();
@@ -188,12 +178,11 @@ public class EmployeeController implements EmployeeRepository {
         } catch (SQLException ex) {
             System.err.println(ex);
         } finally {
-
-            scanner.close();
             try {
                 CONNECTION.getSqlConnection().close();
             } catch (SQLException ex) {
-                System.err.println(ex);
+                System.err.println(ex.getMessage());
+                MainView.mainInit(CONNECTION);
             }
         }
     }
@@ -320,7 +309,7 @@ public class EmployeeController implements EmployeeRepository {
 
     private void updateFirstName(int employeeId) throws SQLException {
         scanner = new Scanner(System.in);
-        try {
+        
             System.out.println("Enter new first name: ");
             String firstName = scanner.nextLine();
 
@@ -332,15 +321,12 @@ public class EmployeeController implements EmployeeRepository {
             System.out.println("Employee ID No." + employeeId + "'s first name has been updated.");
 
             MainView.mainInit(CONNECTION);
-        } finally {
-            scanner.close();
-            CONNECTION.getSqlConnection().close();
-        }
+        
     }
 
     private void updateMidName(int employeeId) throws SQLException {
         scanner = new Scanner(System.in);
-        try {
+       
             System.out.println("Enter new middle name: ");
             String midName = scanner.nextLine();
 
@@ -351,15 +337,12 @@ public class EmployeeController implements EmployeeRepository {
             System.out.println("Employee ID No." + employeeId + "'s middle name has been updated.");
 
             MainView.mainInit(CONNECTION);
-        } finally {
-            scanner.close();
-            CONNECTION.getSqlConnection().close();
-        }
+        
     }
 
     private void updateLastName(int employeeId) throws SQLException {
         scanner = new Scanner(System.in);
-        try {
+       
             System.out.println("Enter new last name: ");
 
             String lastName = scanner.nextLine();
@@ -371,14 +354,11 @@ public class EmployeeController implements EmployeeRepository {
             System.out.println("Employee ID No." + employeeId + "'s last name has been updated.");
             MainView.mainInit(CONNECTION);
 
-        } finally {
-            scanner.close();
-            CONNECTION.getSqlConnection().close();
-        }
+        
     }
 
     private void updateBirthDate(int employeeId) throws SQLException {
-        try {
+       
             scanner = new Scanner(System.in);
 
             System.out.println("Enter new birth date(MM/dd/yyyy): ");
@@ -392,14 +372,11 @@ public class EmployeeController implements EmployeeRepository {
 
             MainView.mainInit(CONNECTION);
 
-        } finally {
-            scanner.close();
-            CONNECTION.getSqlConnection().close();
-        }
+        
     }
 
     private void updatePosition(int employeeId) throws SQLException {
-        try {
+       
             PositionView.positionInit(CONNECTION);
             scanner = new Scanner(System.in);
             int positionId = scanner.nextInt();
@@ -423,15 +400,12 @@ public class EmployeeController implements EmployeeRepository {
             MainView.mainInit(CONNECTION);
 
             System.out.println("");
-        } finally {
-            scanner.close();
-            CONNECTION.getSqlConnection().close();
-        }
+        
 
     }
 
     private void updateStatus(int employeeId) throws SQLException {
-        try {
+        
             StatusView.statusInit(CONNECTION);
             scanner = new Scanner(System.in);
             int statusId = scanner.nextInt();
@@ -455,10 +429,25 @@ public class EmployeeController implements EmployeeRepository {
             MainView.mainInit(CONNECTION);
 
             System.out.println("");
-        } finally {
-            scanner.close();
-            CONNECTION.getSqlConnection().close();
+        
+
+    }
+
+    private int verifyEmployeeId(Scanner scanner) throws SQLException {
+
+        System.out.println("Enter employee id : ");
+        int employeeId = scanner.nextInt();
+
+        statement = CONNECTION.getSqlConnection().prepareStatement(EmployeeQuery.SEARCH_EMPLOYEE);
+        statement.setInt(1, employeeId);
+        result = statement.executeQuery();
+
+        while (!result.next()) {
+            System.out.println("Employee id does not exist. Please try again.: ");
+            return verifyEmployeeId(scanner);
         }
+
+        return employeeId;
 
     }
 }

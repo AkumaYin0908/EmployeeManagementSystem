@@ -74,32 +74,32 @@ public class MainView {
                                 employeeDTO.getPosition(),
                                 employeeDTO.getSalary());
                     }
-                    
 
                     break;
                 case 2:
 
                     System.out.println("************************************** ADD EMPLOYEE **************************************");
                     employeeController.addEmployee(employee);
-                    
 
                     break;
                 case 3:
                     System.out.println("************************************** UPDATE EMPLOYEE **************************************");
                     employeeController.updateEmployee(employee);
-                   
+                    System.out.println("***************************************************************************************\n");
+                    MainView.mainInit(connection);
+
                     break;
                 case 4:
                     System.out.println("************************************** DELETE EMPLOYEE **************************************");
                     employeeController.deleteEmployee(employee);
-                   
+
                     break;
 
                 case 5:
                     System.out.println("************************************** INCREASE POSITIONS' SALARY **************************************");
                     SalaryGradeController salaryGradeController = new SalaryGradeController(connection);
                     salaryGradeController.increaseSalaryGrade(salaryGrade);
-                   
+
                     break;
 
                 default:

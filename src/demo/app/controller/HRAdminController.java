@@ -36,18 +36,13 @@ public class HRAdminController implements HRAdminRepository {
 
     @Override
     public void login(HRAdmin hrAdmin) {
-        
-        try {
-            scanner = new Scanner(System.in);
-            System.out.println("Enter user name: ");
-            hrAdmin.setUserName(scanner.nextLine());
 
-            System.out.println("Enter password");
-            hrAdmin.setPassword(scanner.nextLine());
+        try {
+            hrAdmin = getLoginInput();
 
             statement = CONNECTION.
                     getSqlConnection().
-                    prepareStatement(HRAdminQuery.FIND_HRADMIN);
+                    prepareStatement(HRAdminQuery.SEARCH_USERNAME_PASSWORD);
 
             statement.setString(1, hrAdmin.getUserName());
             statement.setString(2, hrAdmin.getPassword());
@@ -57,7 +52,7 @@ public class HRAdminController implements HRAdminRepository {
                 MainView.userName = hrAdmin.getUserName();
                 MainView.mainInit(CONNECTION);
             } else {
-                System.out.println("Incorrect username or password. Please try again.");              
+                System.out.println("Incorrect username or password. Please try again.");
                 login(hrAdmin);
             }
 
@@ -78,24 +73,17 @@ public class HRAdminController implements HRAdminRepository {
 
     @Override
     public void logout(HRAdmin hrAdmin) {
-       LoginView.accountInit(CONNECTION);
+        LoginView.accountInit(CONNECTION);
     }
 
     @Override
     public void register(HRAdmin hrAdmin) {
 
         try {
-            hrAdmin = getInput();
+            hrAdmin = getRegisterInput();
 
-            statement = CONNECTION.getSqlConnection().prepareStatement(HRAdminQuery.SEARCH_USERNAME);
-            statement.setString(1, hrAdmin.getUserName());
-            result = statement.executeQuery();
+           
 
-            while (result.next()) {
-                System.out.println("User Name already exists! Try again: ");
-                getCredentialInput(hrAdmin, scanner);
-            }
-            
             statement = CONNECTION.getSqlConnection().prepareStatement(HRAdminQuery.ADD_HRADMIN);
             statement.setString(1, hrAdmin.getFirstName());
             statement.setString(2, hrAdmin.getMidName());
@@ -124,7 +112,7 @@ public class HRAdminController implements HRAdminRepository {
         }
     }
 
-    private HRAdmin getInput() {
+    private HRAdmin getRegisterInput() throws SQLException {
         HRAdmin hrAdmin = new HRAdmin();
         scanner = new Scanner(System.in);
         try {
@@ -140,22 +128,51 @@ public class HRAdminController implements HRAdminRepository {
             System.out.println("Enter birth date(MM/dd/yyyy): ");
             hrAdmin.setBirthDate(BirthDateValidator.validate(scanner));
 
-            getCredentialInput(hrAdmin, scanner);
+            validateUserName(hrAdmin);
 
         } catch (InputMismatchException ex) {
             System.err.println(ex.getMessage());
-            getInput();
+            getRegisterInput();
         }
         return hrAdmin;
     }
 
-    private void getCredentialInput(HRAdmin hrAdmin, Scanner scanner) {
+    private HRAdmin getLoginInput() {
+        HRAdmin hrAdmin = new HRAdmin();
 
-        System.out.println("Enter user name");
+        try {
+            scanner = new Scanner(System.in);
+            System.out.println("Enter user name: ");
+            hrAdmin.setUserName(scanner.nextLine());
+
+            System.out.println("Enter password: ");
+            hrAdmin.setPassword(scanner.nextLine());
+
+        } catch (InputMismatchException ex) {
+            System.err.println("Only numbers can be inputted. Please try again: ");
+            getLoginInput();
+        }
+        return hrAdmin;
+    }
+
+    private void validateUserName(HRAdmin hrAdmin) throws SQLException {
+
+        scanner = new Scanner(System.in);
+        System.out.println("Enter user name: ");
         hrAdmin.setUserName(scanner.nextLine());
 
         System.out.println("Enter password: ");
         hrAdmin.setPassword(scanner.nextLine());
+
+        statement = CONNECTION.getSqlConnection().prepareStatement(HRAdminQuery.SEARCH_USERNAME);
+        statement.setString(1, hrAdmin.getUserName());
+        result = statement.executeQuery();
+
+        while (result.next()) {
+            System.out.println("User name already exists. Please try again");
+            validateUserName(hrAdmin);
+        }
+
     }
 
 }
